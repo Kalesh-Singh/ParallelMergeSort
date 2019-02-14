@@ -9,11 +9,11 @@
 int array[SIZE];
 
 void fillArrayWithRandomNumbers(int arr[SIZE]) {
-    for(int i = 0; i<SIZE; i++) array[i] = rand()%100;
+    for (int i = 0; i < SIZE; i++) array[i] = rand() % 100;
 }
 
 void printArray(int arr[SIZE]) {
-    for(int i = 0; i<SIZE; i++) printf("%5d", arr[i]);
+    for (int i = 0; i < SIZE; i++) printf("%5d", arr[i]);
     printf("\n");
 }
 
@@ -32,36 +32,59 @@ void merge(int start, int mid, int end) {
     int *lp = leftArr;
     int *lsp = &array[start];
     int *rp = rightArr;
-    int *rsp = &array[mid+1];
+    int *rsp = &array[mid + 1];
     int *leftStart = lsp;
-    while(lp != lsp + leftLen) {
+    while (lp != lsp + leftLen) {
         *lp++ = *leftStart++;
     }
     int *rightStart = rsp;
-    while(rp != rsp + rightLen) {
+    while (rp != rsp + rightLen) {
         *rp++ = *rightStart++;
     }
 
-//    std::copy(&array[start], &arr[mid] + 1, &leftArr);
-//    std::copy(&array[mid+1], &arr[end] + 1, &rightArr);
+    int i = start, leftIdx = 0, rightIdx = 0;
+    while (i <= end && leftIdx < leftLen && rightIdx < rightLen) {
+        if (leftArr[leftIdx] < rightArr[rightIdx]) {
+            array[i] = leftArr[leftIdx];
+            leftIdx++;
+            i++;
+        } else {
+            array[i] = rightArr[rightIdx];
+            rightIdx++;
+            i++;
+        }
+    }
 
+    while (i <= end) {
+        while (leftIdx < leftLen) {
+            array[i] = leftArr[leftIdx];
+            leftIdx++;
+            i++;
+        }
+        while (rightIdx < rightLen) {
+            array[i] = rightArr[rightIdx];
+            rightIdx++;
+            i++;
+        }
+    }
 }
 
 // Runs mergesort on the array segment described in the
 // argument. Spawns two threads to mergesort each half
 // of the array segment, and then merges the results.
-void* mergeSort(void* args) {
-    StartEndIndexes sei = *((StartEndIndexes*) args);
+void *mergeSort(void *args) {
+    StartEndIndexes sei = *((StartEndIndexes *) args);
     if (sei.start != sei.end) {
         pthread_t leftThread;
         pthread_t rightThread;
         int mid = (sei.start + sei.end) / 2;        // Integer division
         StartEndIndexes leftSei = {sei.start, mid};
-        StartEndIndexes rightSei = {mid+1, sei.end};
-        pthread_create(&leftThread, NULL, mergeSort, (void*) &leftSei);
-        pthread_create(&rightThread, NULL, mergeSort, (void*) &rightSei);
+        StartEndIndexes rightSei = {mid + 1, sei.end};
+        pthread_create(&leftThread, NULL, mergeSort, (void *) &leftSei);
+        pthread_create(&rightThread, NULL, mergeSort, (void *) &rightSei);
         pthread_join(leftThread, NULL);
         pthread_join(rightThread, NULL);
+        merge(sei.start, mid, sei.end);
     }
     return NULL;
 }
@@ -81,7 +104,7 @@ int main() {
 
     // 3. Create a thread for merge sort.
     pthread_t mergeSortThread;
-    pthread_create(&mergeSortThread, NULL, mergeSort, (void*) &sei);
+    pthread_create(&mergeSortThread, NULL, mergeSort, (void *) &sei);
 
     // 4. Wait for mergesort to finish.
     pthread_join(mergeSortThread, NULL);
