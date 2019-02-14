@@ -22,7 +22,28 @@ typedef struct StartEndIndexes {
     int end;
 } StartEndIndexes;
 
-void merge(int start, int min, int end) {
+void merge(int start, int mid, int end) {
+    int leftLen = mid + 1 - start;
+    int rightLen = end - mid;
+
+    int leftArr[leftLen];
+    int rightArr[rightLen];
+
+    int *lp = leftArr;
+    int *lsp = &array[start];
+    int *rp = rightArr;
+    int *rsp = &array[mid+1];
+    int *leftStart = lsp;
+    while(lp != lsp + leftLen) {
+        *lp++ = *leftStart++;
+    }
+    int *rightStart = rsp;
+    while(rp != rsp + rightLen) {
+        *rp++ = *rightStart++;
+    }
+
+//    std::copy(&array[start], &arr[mid] + 1, &leftArr);
+//    std::copy(&array[mid+1], &arr[end] + 1, &rightArr);
 
 }
 
@@ -34,13 +55,13 @@ void* mergeSort(void* args) {
     if (sei.start != sei.end) {
         pthread_t leftThread;
         pthread_t rightThread;
-        int mid = (start + end) / 2;        // Integer division
-        StartEndIndexes leftSei = {start, mid};
-        StartEndIndexes rightSei = {mid+1, end};
+        int mid = (sei.start + sei.end) / 2;        // Integer division
+        StartEndIndexes leftSei = {sei.start, mid};
+        StartEndIndexes rightSei = {mid+1, sei.end};
         pthread_create(&leftThread, NULL, mergeSort, (void*) &leftSei);
         pthread_create(&rightThread, NULL, mergeSort, (void*) &rightSei);
-        join(leftThread, NULL);
-        join(rightThread, NULL);
+        pthread_join(leftThread, NULL);
+        pthread_join(rightThread, NULL);
     }
     return NULL;
 }
