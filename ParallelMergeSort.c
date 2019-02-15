@@ -4,12 +4,12 @@
 #include <time.h>
 #include <unistd.h>
 
-#define SIZE 5
+#define SIZE 6
 
 int array[SIZE];
 
 void fillArrayWithRandomNumbers(int arr[SIZE]) {
-    for (int i = 0; i < SIZE; i++) array[i] = rand() % 100;
+    for (int i = 0; i < SIZE; i++) arr[i] = rand() % 100;
 }
 
 void printArray(int arr[SIZE]) {
@@ -29,17 +29,20 @@ void merge(int start, int mid, int end) {
     int leftArr[leftLen];
     int rightArr[rightLen];
 
-    int *lp = leftArr;
-    int *lsp = &array[start];
-    int *rp = rightArr;
-    int *rsp = &array[mid + 1];
-    int *leftStart = lsp;
-    while (lp != lsp + leftLen) {
-        *lp++ = *leftStart++;
+    int *p = leftArr;
+    int *pStart = &array[start];
+    int *pEnd = &array[mid+1];
+
+    while (pStart != pEnd) {
+        *p++ = *pStart++;
     }
-    int *rightStart = rsp;
-    while (rp != rsp + rightLen) {
-        *rp++ = *rightStart++;
+
+    p = rightArr;
+    pStart = &array[mid+1];
+    pEnd = &array[end+1];
+
+    while (pStart != pEnd) {
+        *p++ = *pStart++;
     }
 
     int i = start, leftIdx = 0, rightIdx = 0;
