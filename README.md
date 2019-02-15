@@ -1,6 +1,6 @@
 # Parallel Merge Sort ##
 
-This is a simple multithreaded version of merge sort, that utilizes the pthread library.
+This is a simple multi threaded version of merge sort, that utilizes the pthread library.
 
 ## Specifications ##
 + Merge sort recursively sorts halves of the input and then merges the 2 sorted halves.
