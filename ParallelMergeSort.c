@@ -29,46 +29,36 @@ void merge(int start, int mid, int end) {
     int leftArr[leftLen];
     int rightArr[rightLen];
 
-    int *p = leftArr;
-    int *pStart = &array[start];
-    int *pEnd = &array[mid+1];
-
-    while (pStart != pEnd) {
-        *p++ = *pStart++;
+    // Copy the sub arrays
+    for (int i = start; i <= mid; i++) {
+        leftArr[i - start] = array[i];
+    }
+    for (int i = mid + 1; i <= end; i++) {
+        rightArr[i - mid - 1] = array[i];
     }
 
-    p = rightArr;
-    pStart = &array[mid+1];
-    pEnd = &array[end+1];
+    int arrIdx = start, leftIdx = 0, rightIdx = 0;
 
-    while (pStart != pEnd) {
-        *p++ = *pStart++;
-    }
-
-    int i = start, leftIdx = 0, rightIdx = 0;
-    while (i <= end && leftIdx < leftLen && rightIdx < rightLen) {
+    while (leftIdx < leftLen && rightIdx < rightLen) {
         if (leftArr[leftIdx] < rightArr[rightIdx]) {
-            array[i] = leftArr[leftIdx];
+            array[arrIdx] = leftArr[leftIdx];
             leftIdx++;
-            i++;
         } else {
-            array[i] = rightArr[rightIdx];
+            array[arrIdx] = rightArr[rightIdx];
             rightIdx++;
-            i++;
         }
+        arrIdx++;
     }
 
-    while (i <= end) {
-        while (leftIdx < leftLen) {
-            array[i] = leftArr[leftIdx];
-            leftIdx++;
-            i++;
-        }
-        while (rightIdx < rightLen) {
-            array[i] = rightArr[rightIdx];
-            rightIdx++;
-            i++;
-        }
+    while (leftIdx < leftLen) {
+        array[arrIdx] = leftArr[leftIdx];
+        leftIdx++;
+        arrIdx++;
+    }
+    while (rightIdx < rightLen) {
+        array[arrIdx] = rightArr[rightIdx];
+        rightIdx++;
+        arrIdx++;
     }
 }
 
