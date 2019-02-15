@@ -7,7 +7,7 @@ This is a simple multi threaded version of merge sort, that utilizes the pthread
 + The base case being when there is only 1 element.
 
 ## Multi-threading ##
-+ An intial thread performs the first call to merge sort.
++ An initial thread performs the first call to merge sort.
 + Thereafter, a thread is spanned for each half of the input on which merges sort must be performed.
 
 ## Compiling the Program ##
